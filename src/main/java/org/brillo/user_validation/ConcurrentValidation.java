@@ -1,32 +1,18 @@
 package org.brillo.user_validation;
 
-import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
 public class ConcurrentValidation {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Username: ");
-        String username = scanner.nextLine();
-
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
-
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
-
-        System.out.print("Date of Birth (DD/MM/YYYY): ");
-        String dobString = scanner.nextLine();
-
+        Input.UserInput input = Input.returnInput();
         CompletableFuture<ValidationResult> usernameValidation =
-                CompletableFuture.supplyAsync(() -> validateUsername(username));
+                CompletableFuture.supplyAsync(() -> validateUsername(input.username()));
         CompletableFuture<ValidationResult> emailValidation =
-                CompletableFuture.supplyAsync(() -> validateEmail(email));
+                CompletableFuture.supplyAsync(() -> validateEmail(input.email()));
         CompletableFuture<ValidationResult> passwordValidation =
-                CompletableFuture.supplyAsync(() -> validatePassword(password));
+                CompletableFuture.supplyAsync(() -> validatePassword(input.password()));
         CompletableFuture<ValidationResult> dobValidation =
-                CompletableFuture.supplyAsync(() -> validateDOB(dobString));
+                CompletableFuture.supplyAsync(() -> validateDOB(input.dobString()));
 
         CompletableFuture<Void> allValidations = CompletableFuture.allOf(
                 usernameValidation, emailValidation, passwordValidation, dobValidation);
@@ -55,7 +41,7 @@ public class ConcurrentValidation {
         if (dobString.isEmpty()) {
             result.addValidationFailure("Empty date of birth: Date of birth cannot be empty");
         }
-        if (!UserValidation.isValidDOB(dobString)) {
+        if (UserValidation.invalidDateOfBirth(dobString)) {
             result.addValidationFailure("Under age: Age must be, at least, 16 years old");
         }
         return result;
@@ -66,7 +52,7 @@ public class ConcurrentValidation {
           if (password.isEmpty()) {
             result.addValidationFailure("Empty password: Passwords cannot be empty");
         }
-        if (!UserValidation.isValidPassword(password)) {
+        if (UserValidation.invalidPassword(password)) {
             result.addValidationFailure("Invalid password: Password must contain at least 1 uppercase, " +
                     "1 lowercase, 1 special character, 1 digit, and 8 characters without whitespace");
         }
@@ -78,7 +64,7 @@ public class ConcurrentValidation {
          if (email.isEmpty()) {
             result.addValidationFailure("Empty email: Email address cannot be empty");
         }
-        if (!UserValidation.isValidEmail(email)) {
+        if (UserValidation.invalidEmail(email)) {
             result.addValidationFailure("Invalid email: Please enter a valid email address");
         }
         return result;
