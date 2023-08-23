@@ -2,7 +2,7 @@ package org.brillo.user_validation;
 
 public class ValidationResult {
      private boolean valid = true;
-    private StringBuilder message = new StringBuilder();
+    private final StringBuilder message = new StringBuilder();
 
     public void addValidationFailure(String reason) {
         valid = false;
@@ -10,6 +10,9 @@ public class ValidationResult {
     }
 
     public boolean isValid() {
+        if (valid) {
+            message.append(true);
+        }
         return valid;
     }
 

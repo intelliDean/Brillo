@@ -70,22 +70,20 @@ public class UserValidation {
     }
 
    public static boolean isValidEmail(String email) {
-        // Email validation regex
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return Pattern.compile(regex).matcher(email).matches();
     }
 
     public static boolean isValidPassword(String password) {
-        // Password validation regex: At least 1 uppercase, 1 special character, 1 digit, 8 characters
         String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
         return Pattern.compile(regex).matcher(password).matches();
     }
 
     public static boolean isValidDOB(String dobString) {
         try {
-            LocalDate dob = LocalDate.parse(dobString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            LocalDate dateOfBirth = LocalDate.parse(dobString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             LocalDate minDOB = LocalDate.now().minusYears(16);
-            return dob.isBefore(minDOB);
+            return dateOfBirth.isBefore(minDOB);
         } catch (Exception e) {
             return false;
         }
