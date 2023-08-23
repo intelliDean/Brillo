@@ -1,4 +1,4 @@
-package org.brillo;
+package org.brillo.pancake_shop;
 
 import java.time.LocalTime;
 import java.util.Random;
